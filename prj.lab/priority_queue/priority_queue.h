@@ -7,9 +7,10 @@
 class QueueR {
     public:
         QueueR() : 
-            first(nullptr),
-            last(nullptr)
+            first(nullptr)
         {}
+
+        ~QueueR() = default;
 
         void push(int value);
         void pop();
@@ -29,13 +30,50 @@ class QueueR {
             Node* next_ptr;
         };
 
-        Node *first, *last;        
+        Node *first;        
 };
+
 
 bool QueueR::empty(){
     return (first == nullptr);
+};
+
+
+void QueueR::push(int value){
+    if (empty()) {
+        first = new Node(value);
+        return;
+    }
+
+    Node *newNode = new Node(value);
+    Node *temp = first;
+
+    if (newNode->value < first->value){
+        std::swap(first->next_ptr, newNode);
+        return;
+    }
+
+    while(temp != nullptr)  {
+        if (newNode->value < temp->next_ptr->value) {
+            newNode->next_ptr = temp->next_ptr;
+            temp->next_ptr = newNode;
+            break;
+        }
+        temp = temp->next_ptr;
+    }
+};
+
+
+void QueueR::pop() {
+    Node *temp = first;
+
+    first = first->next_ptr;
+
+    delete temp;
 }
 
-
+int QueueR::top() {
+    return first->value;
+}
 
 #endif
